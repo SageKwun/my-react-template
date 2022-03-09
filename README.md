@@ -199,3 +199,54 @@ pnpm run build
 ```
 
 如果看到当前路径下出现了 dist 文件夹，并且里面的 .html 文件打开符合你的预期，那么就通过啦～
+
+## 四、配置开发环境
+
+1. 安装 webpack-dev-server
+
+```shell
+pnpm install -D webpack-dev-server
+```
+
+2. 配置 webpack.dev.js
+
+```javascript
+// ...
+const path = require("path");
+module.exports = merge(common, {
+  // ...
+  devServer: {
+    // 静态资源配置
+    static: {
+      directory: path.resolve(__dirname, "public"), // 使开发时能访问 /public 文件夹
+      serveIndex: true, // （默认）查看没有 index.html 文件的目录时生成目录列表
+    },
+    historyApiFallback: true, // 当使用 [HTML5 History API] 时，任意的 `404` 响应被替代为 `index.html`
+    open: true, // 自动打开浏览器
+    hot: true, // 热更新
+    compress: false, // 是否开启代码压缩
+    host: "localhost",
+    port: 9000, // 启动的端口
+  },
+});
+```
+
+3. 配置 npm scripts
+
+/package.json
+
+```json
+{
+  "scripts": {
+    "dev": "webpack serve --config webpack.dev.js"
+  }
+}
+```
+
+4. 测试
+
+```shell
+pnpm run dev
+```
+
+看一下吧～

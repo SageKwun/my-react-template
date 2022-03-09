@@ -276,3 +276,92 @@ module.exports = {
   // ...
 };
 ```
+
+2. 配置开发环境（使用 webpack 自带的处理方式）
+
+/webpack.dev.js
+
+```javascript
+// ...
+module.exports = merge(common, {
+  // ...
+  module: {
+    rules: [
+      // ...
+      {
+        test: /\.(png|jpe?g|svg|gif)$/,
+        type: "asset/inline",
+      },
+    ],
+  },
+  // ...
+});
+```
+
+3. 配置生产环境（使用 file-loader）
+
+安装 file-loader
+
+```shell
+pnpm install -D file-loader
+```
+
+配置 /webpack.prod.js
+
+```javascript
+// ...
+module.exports = {
+  // ...
+  module: {
+    rules: [
+      // ...
+      {
+        test: /\.(png|jpe?g|svg|gif)$/,
+        use: {
+          loader: "file-loader",
+          options: {
+            // 定义打包后文件的名称；
+            // [name]:原文件名，[hash]:hash字符串（如果不定义名称，默认就以hash命名，[ext]:原文件的后缀名）
+            name: "[name]_[hash].[ext]",
+            outputPath: "images/", //  定义图片输出的文件夹名（在output.path目录下）
+          },
+        },
+      },
+    ],
+  },
+  // ...
+};
+```
+
+4. 测试
+
+让我们在 /src/index.jsx 里引入一张图片 /public/a.jpg
+
+/src/index.jsx
+
+```javascript
+// ...
+import a from "../public/a.jpg";
+
+function App() {
+  return (
+    <div>
+      react template
+      <img src={a} />
+    </div>
+  );
+}
+ReactDOM.render(<App />, document.getElementById("root"));
+```
+
+分别测试开发环境和生产环境
+
+```shell
+pnpm run dev
+```
+
+```shell
+pnpm run build
+```
+
+快去欣赏你的照片吧～

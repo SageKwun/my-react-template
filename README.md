@@ -491,3 +491,83 @@ pnpm run build
 ```
 
 看一下有没有红色的矩形吧～
+
+6. 安装 less-loader
+
+```shell
+pnpm install -D less less-loader
+```
+
+7. 配置 less-loader
+
+/webpack.common.js
+
+```javascript
+// ...
+module.exports = {
+  // ...
+  module: {
+    rules: [
+      // ...
+      {
+        test: /\.(c|le)ss$/, // 对 css 和 less 使用同一套 loader
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          "css-loader",
+          "postcss-loader",
+          // 当解析antd.less，必须写成下面格式，否则会报Inline JavaScript is not enabled错误
+          {
+            loader: "less-loader",
+            options: { lessOptions: { javascriptEnabled: true } },
+          },
+        ],
+      },
+    ],
+  },
+  // ...
+};
+```
+
+8. 测试
+
+新建 /src/index.less
+
+```less
+@circle: 50%;
+
+#circle {
+  border-radius: @circle;
+}
+```
+
+/src/index.jsx
+
+```javascript
+import React from "react";
+import ReactDOM from "react-dom";
+import a from "../public/a.jpg";
+import "./index.css";
+import "./index.less";
+
+function App() {
+  return (
+    <div id='circle' class='redRect'>
+      react template
+      <img src={a} />
+    </div>
+  );
+}
+ReactDOM.render(<App />, document.getElementById("root"));
+```
+
+```shell
+pnpm run dev
+```
+
+```shell
+pnpm run build
+```
+
+看看有没有一个红色的圆呢～

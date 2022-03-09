@@ -29,6 +29,8 @@
     "cssnano": "^5.1.1",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
+    "less": "^4.1.2",
+    "less-loader": "^10.2.0",
     "mini-css-extract-plugin": "^2.6.0",
     "postcss": "^8.4.8",
     "postcss-loader": "^6.2.1",

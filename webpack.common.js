@@ -33,13 +33,18 @@ module.exports = {
         },
       },
       {
-        test: /\.css$/,
+        test: /\.(c|le)ss$/, // 对 css 和 less 使用同一套 loader
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
           },
           "css-loader",
           "postcss-loader",
+          // 当解析antd.less，必须写成下面格式，否则会报Inline JavaScript is not enabled错误
+          {
+            loader: "less-loader",
+            options: { lessOptions: { javascriptEnabled: true } },
+          },
         ],
       },
     ],

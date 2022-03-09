@@ -11,6 +11,13 @@ module.exports = {
         test: /\.jsx?$/, // 识别 .js .jsx 文件
         use: "babel-loader", // 使用 babel-loader 处理
       },
+      {
+        test: /\.(eot|ttf|woff|woff2)$/,
+        type: "asset/resource",
+        generator: {
+          filename: "fonts/[hash][ext][query]",
+        },
+      },
     ],
   },
   plugins: [

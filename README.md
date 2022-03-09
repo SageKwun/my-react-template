@@ -250,3 +250,29 @@ pnpm run dev
 ```
 
 看一下吧～
+
+# 五、静态资源配置（图片、字体文件）
+
+1. 配置字体
+
+/webpack.common.js
+
+```javascript
+// ...
+module.exports = {
+  // ...
+  module: {
+    rules: [
+      // ...
+      {
+        test: /\.(eot|ttf|woff|woff2)$/,
+        type: "asset/resource",
+        generator: {
+          filename: "fonts/[hash][ext][query]",
+        },
+      },
+    ],
+  },
+  // ...
+};
+```

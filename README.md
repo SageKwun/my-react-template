@@ -571,3 +571,45 @@ pnpm run build
 ```
 
 看看有没有一个红色的圆呢～
+
+## 七、js 压缩
+
+由于 js 压缩包括其他的体积优化需要额外的配置和额外的时间、计算资源，因此我们放在生产环境
+
+/webpack.prod.js
+
+```javascript
+// ...
+const TerserPlugin = require("terser-webpack-plugin");
+module.exports = merge(common, {
+  // ...
+  optimization: {
+    minimize: true, // 开启体积优化
+    minimizer: [
+      new TerserPlugin({
+        parallel: 4, // 默认是 os.cpus().length - 1
+        terserOptions: {
+          ecma: 5, // compress 和 output 的 ecma
+          // 压缩配置
+          compress: {
+            comparisons: true, // 简化判断条件
+            inline: 2, // 简化函数
+          },
+          // 输出配置
+          output: {
+            comments: true, // 去除注释
+          },
+        },
+      }),
+    ],
+  },
+});
+```
+
+运行
+
+```shell
+pnpm run build
+```
+
+打开 /dist/index-[hash].js，有没有感觉代码很鬼畜呢～

@@ -59,4 +59,20 @@ module.exports = {
       filename: "assets/[name].css",
     }),
   ],
+  // 优化配置
+  optimization: {
+    moduleIds: "deterministic", // 避免 module.id 变化引起的重复打包
+    runtimeChunk: "single", // 抽离 runtime,
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        // 抽离第三方库，配置缓存
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          chunks: "all",
+        },
+      },
+    },
+  },
 };

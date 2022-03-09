@@ -666,3 +666,43 @@ pnpm run build
 ```
 
 打开 /dist/assets/index.css，可以看到没有测试代码～
+
+## 九、代码分割
+
+在前面抽取 css 的时候，我们其实就做了一部分的代码分割的工作。在这一节，我们还将从更高的视角（模块）的角度去做代码分割，并为后面缓存的配置做准备
+
+1. 配置共用环境
+
+由于缓存不论在开发环境还是生产环境都能帮我们极大地提高效率，因此我们将代码分割放在共用环境
+
+/webpack.common.js
+
+```javascript
+module.exports = {
+  // ...
+  // 优化配置
+  optimization: {
+    moduleIds: "deterministic", // 避免 module.id 变化引起的重复打包
+    runtimeChunk: "single", // 抽离 runtime,
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        // 抽离第三方库，配置缓存
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          chunks: "all",
+        },
+      },
+    },
+  },
+};
+```
+
+2. 测试
+
+```shell
+pnpm run build
+```
+
+可以看到，/dist 下会出现 vendors runtime 和 index 开头的 js 文件，说明我们的代码分割成功了～

@@ -58,3 +58,144 @@ pnpm install -D babel-loader @babel/preset-react @babel/core @babel/preset-env @
   ]
 }
 ```
+
+## 三、配置 webpack
+
+1. 新建配置文件
+
+- 共用环境配置 /webpack.common.js
+- 开发环境配置 /webpack.dev.js
+- 生产环境配置 /webpack.prod.js
+
+2. 配置共用环境
+
+/webpack.common.js
+
+```javascript
+const path = require("path");
+module.exports = {
+  // 设置入口
+  entry: {
+    index: path.resolve(__dirname, "src/index.jsx"),
+  },
+  module: {
+    rules: [
+      {
+        test: /\.jsx?$/, // 识别 .js .jsx 文件
+        use: "babel-loader", // 使用 babel-loader 处理
+      },
+    ],
+  },
+};
+```
+
+3. 配置开发环境
+
+/webpack.dev.js
+
+```javascript
+const { merge } = require("webpack-merge"); // 合并两个 config ，注意要解构
+const common = require("./webpack.common.js");
+// 使用 merge 函数合并
+module.exports = merge(common, {
+  // 设置为开发模式
+  mode: "development",
+});
+```
+
+4. 配置生产环境
+
+/webpack.prod.js
+
+```javascript
+const path = require("path");
+const { merge } = require("webpack-merge"); // 合并两个 config ，注意要解构
+const common = require("./webpack.common.js");
+// 使用 merge 函数合并
+module.exports = merge(common, {
+  // 设置为生产模式
+  mode: "production",
+  // 输出配置
+  output: {
+    path: path.resolve(__dirname, "dist"), // 输出路径
+    filename: "[name]-[contenthash:8].js", // [] 占位符
+    clean: true, // 每次删除上次构建的文件
+  },
+});
+```
+
+5. 新建业务代码文件
+
+/src/index.jsx
+
+```javascript
+import React from "react";
+import ReactDOM from "react-dom";
+
+function App() {
+  return <div>react template</div>;
+}
+ReactDOM.render(<App />, document.getElementById("root"));
+```
+
+/public/index.html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>react template</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+```
+
+6. 配置 html-webpack-plugin
+
+```shell
+pnpm install -D html-webpack-plugin
+```
+
+/webpack.common.js
+
+```javascript
+// ...
+const htmlWebpackPlugin = require("html-webpack-plugin");
+module.exports = {
+  // ...
+  plugins: [
+    // 打包时自动生成 .html 文件
+    new htmlWebpackPlugin({
+      filename: "index.html",
+      template: path.resolve(__dirname, "./public/index.html"),
+    }),
+  ],
+};
+```
+
+7. 配置 npm scripts
+
+/package.json
+
+```json
+{
+  // 省略...
+  "scripts": {
+    "build": "webpack --config webpack.prod.js"
+  }
+}
+```
+
+8. 测试打包
+
+```shell
+pnpm run build
+```
+
+如果看到当前路径下出现了 dist 文件夹，并且里面的 .html 文件打开符合你的预期，那么就通过啦～

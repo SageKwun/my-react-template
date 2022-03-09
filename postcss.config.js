@@ -6,5 +6,9 @@ module.exports = {
     require("cssnano")({
       preset: "default",
     }),
+    // 清除没用到的 css 代码
+    require("@fullhuman/postcss-purgecss")({
+      content: ["index.html", "**/*.js", "**/*.html"], // 处理范围
+    }),
   ],
 };

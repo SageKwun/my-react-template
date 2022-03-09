@@ -613,3 +613,56 @@ pnpm run build
 ```
 
 打开 /dist/index-[hash].js，有没有感觉代码很鬼畜呢～
+
+## 八、css 体积优化
+
+由于 js 压缩包括其他的体积优化需要额外的配置和额外的时间、计算资源，因此我们放在生产环境
+
+其实在 六、配置 css、less 支持 一节中，在 postcss 里就用了 cssnano 来压缩我们的 css 代码。在这一节，我们会再涉及 purgecss 和 css-minimizer-webpack-plugin
+
+purgecss 清除没有用到的 css 代码的插件，它可以在 postcss 中作为其插件使用，或者单独作为 webpack 的插件（purgecss-webpack-plugin）使用。在这一节我们选择前者，并合并到 main 分支中
+
+css-minimizer-webpack-plugin 就像 purgecss-webpack-plugin 一样，是单独的 webpack 插件，由于其也使用了 cssnano 来压缩代码，因此我们仅做示例，不会合并到 main 分支
+
+1. 安装
+
+```shell
+pnpm install -D @fullhuman/postcss-purgecss
+```
+
+2. 配置 postcss.config.js
+
+/postcss.config.js
+
+```javascript
+module.exports = {
+  plugins: [
+    // ...
+    // 清除没用到的 css 代码
+    require("@fullhuman/postcss-purgecss")({
+      content: ["index.html", "**/*.js", "**/*.html"], // 处理范围
+    }),
+  ],
+};
+```
+
+3. 测试
+
+我们在 /src/index.css 里加入一些没有用到的样式
+
+/src/index.css
+
+```css
+/* ... */
+
+/* 没有用到的样式 */
+.unused {
+  display: none;
+}
+```
+
+```shell
+pnpm run build
+```
+
+打开 /dist/assets/index.css，可以看到没有测试代码～

@@ -1,5 +1,7 @@
 const path = require("path");
 const htmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 module.exports = {
   // 设置入口
   entry: {
@@ -30,6 +32,16 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          "css-loader",
+          "postcss-loader",
+        ],
+      },
     ],
   },
   plugins: [
@@ -37,6 +49,9 @@ module.exports = {
     new htmlWebpackPlugin({
       filename: "index.html",
       template: path.resolve(__dirname, "./public/index.html"),
+    }),
+    new MiniCssExtractPlugin({
+      filename: "assets/[name].css",
     }),
   ],
 };

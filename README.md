@@ -365,3 +365,129 @@ pnpm run build
 ```
 
 快去欣赏你的照片吧～
+
+# 六、配置 css、less 支持
+
+1. 安装 css 所需的 loader
+
+```shell
+pnpm install -D mini-css-extract-plugin css-loader postcss postcss-loader
+```
+
+- mini-css-extract-plugin
+
+  > 这个插件将 CSS 提取到单独的文件中。它为每个包含 css 的 js 文件创建一个 css 文件。它支持按需加载 css 和 SourceMaps。
+
+  需要变为行内样式的话可以把这个替换为 style-loader
+
+- css-loader
+
+  > css-loader 会对 @import 和 url() 进行处理，就像 js 解析 import/require() 一样
+
+- postcss-loader
+
+  > 是一个用 JavaScript 工具和插件转换 CSS 代码的工具
+
+  个人看法：postcss 就像是 javascript 里的 babel，有着强大插件体系来对 css 做各种处理。通过 postcss，我们可以像 babel 将 ES6 转译成 ES5 或更早一样处理 css 的兼容性、转译等需求
+
+2. 配置 loader
+
+/webpack.common.js
+
+```javascript
+// ...
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+module.exports = {
+  // ...
+  module: {
+    rules: [
+      // ...
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          "css-loader",
+          "postcss-loader",
+        ],
+      },
+    ],
+  },
+  plugins: [
+    // ...
+    new MiniCssExtractPlugin({
+      filename: "assets/[name].css", // 提取出的 css 文件的输出路径
+    }),
+  ],
+};
+```
+
+3. 安装 postcss 插件
+
+```shell
+pnpm install -D cssnano autoprefixer@latest
+```
+
+- cssnano
+  压缩 css 代码
+- autoprefixer
+  由于标准的通过需要很长的时间，因此各浏览器厂商可能自己先实现功能，并通过浏览器前缀来区别、使用。而 autoprefixer 就能帮我们自动加入所需的前缀
+
+4. 配置 postcss
+
+新建 /postcss.config.js
+
+```javascript
+module.exports = {
+  plugins: [
+    // 为我们的 css 内容添加浏览器厂商前缀兼容
+    require("autoprefixer"),
+    // 尽可能小的压缩我们的 css 代码
+    require("cssnano")({
+      preset: "default",
+    }),
+  ],
+};
+```
+
+5. 测试 css
+
+新建 /src/index.css
+
+```css
+.redRect {
+  width: 100px;
+  height: 100px;
+  background-color: red;
+}
+```
+
+/src/index.jsx
+
+```javascript
+import React from "react";
+import ReactDOM from "react-dom";
+import a from "../public/a.jpg";
+import "./index.css";
+
+function App() {
+  return (
+    <div class='redRect'>
+      react template
+      <img src={a} />
+    </div>
+  );
+}
+ReactDOM.render(<App />, document.getElementById("root"));
+```
+
+```shell
+pnpm run dev
+```
+
+```shell
+pnpm run build
+```
+
+看一下有没有红色的矩形吧～

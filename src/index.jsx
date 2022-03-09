@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import a from "../public/a.jpg";
+import "./index.css";
 
 function App() {
   return (
-    <div>
+    <div class='redRect'>
       react template
       <img src={a} />
     </div>

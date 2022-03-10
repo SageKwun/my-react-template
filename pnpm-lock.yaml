@@ -17,6 +17,7 @@ specifiers:
   mini-css-extract-plugin: ^2.6.0
   postcss: ^8.4.8
   postcss-loader: ^6.2.1
+  prettier: 2.5.1
   react: ^17.0.2
   react-dom: ^17.0.2
   webpack: ^5.70.0
@@ -44,6 +45,7 @@ devDependencies:
   mini-css-extract-plugin: 2.6.0_webpack@5.70.0
   postcss: 8.4.8
   postcss-loader: 6.2.1_postcss@8.4.8+webpack@5.70.0
+  prettier: 2.5.1
   webpack: 5.70.0_webpack-cli@4.9.2
   webpack-cli: 4.9.2_6d3cb84eb7e855ae6fc0a3ee585c0c26
   webpack-dev-server: 4.7.4_webpack-cli@4.9.2+webpack@5.70.0
@@ -3998,6 +4000,12 @@ packages:
       nanoid: 3.3.1
       picocolors: 1.0.0
       source-map-js: 1.0.2
+    dev: true
+
+  /prettier/2.5.1:
+    resolution: {integrity: sha512-vBZcPRUR5MZJwoyi3ZoyQlc1rXeEck8KgeC9AwwOn+exuxLxq5toTRDTSaVrXHxelDMHy9zlicw8u66yxoSUFg==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
     dev: true
 
   /pretty-error/4.0.0:

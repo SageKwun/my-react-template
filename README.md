@@ -761,3 +761,74 @@ pnpm run build
 ```
 
 可以看到第一次 webpack 的输出，代码后面会跟着[built] [code generated]，而第二次变成了[cached]，时间上的感觉也是比较显而易见的～
+
+## 十一、编码规范
+
+本节的编码规范是狭义的编码规范，仅涉及代码风格（Prettier）和代码质量（ESLint），并不包括架构、命名规范等内容。
+
+1. 代码风格（Prettier）
+
+在多人开发的环境中，由于每个人的习惯和配置不同，容易出现代码风格不一致的问题。不同的代码风格虽然不会影响最终的运行结果，但是导致一下几个问题：
+
+- 降低代码的可理解性，其他开发者在阅读代码的时候会不习惯，。
+- 而且当维护不是自己编写的代码的时候，在代码风格上要么坚持自己的，导致风格混乱，要么顺应别人的，更加难受。
+- 自己的代码格式化配置可能会自动重新格式化代码，导致没有意义的 commit。
+
+总而言之，开发不应该让代码风格影响，配置一个全局的代码风格是“众望所归”，这也是以 Prettier 为例的一众代码格式化软件的意义。
+
+2. 安装 Prettier
+
+Prettier
+
+> 一款可配置的代码格式化应用
+
+```shell
+pnpm install -D -E prettier
+```
+
+3. 配置 Prettier
+
+新建 /.prettierrc
+
+里面很多都是默认项，不过为了学习大多都是写出来了，方便我们更好地了解 prettier 的能力（配合 vscode 的 `Editor:Format On Save` 保持自动格式化更佳～）
+
+```json
+// 顺序依据官网文档
+// 为了方便学习，写了注释，可以去源文件复制代码
+{
+  "printWidth": 80, // 代码宽度建议不超过100字符
+  "tabWidth": 2, // tab缩进2个空格
+  "semi": true, // 末尾分号，看到很多建议取消末尾分号，但个人在开发过程中常常 if(...) ...;，确实分号可能会造成bug。
+  "singleQuote": false, // 单引号
+  "quoteProps": "as-needed", // 改变对象的属性
+  "jsxSingleQuote": true, // jsx中使用单引号
+  "trailingComma": "es5", // 尾随逗号
+  "bracketSpacing": "true", // 控制对象字面量的输出
+  "bracketSameLine": "true", // 对象最后一个 > 是否换行
+  "arrowParens": "avoid", // 箭头函数仅在必要时使用()
+  // rangeStart: , // 表示 prettier 格式化的范围的开始，暂时用不到
+  // rangeEnd: , // 表示 prettier 格式化的范围的结束，暂时用不大
+  // parser: , // 表示使用的 parser，暂时用不到
+  // filepath: , // 命令行参数，暂时用不到
+  // requirePragma; , // 制定 prettier 处理的内容，暂时用不到
+  // insertPragma: , // 意义同上
+  "proseWrap": "preserve", // 散文换行，避免破环一些依赖换行的语法
+  "htmlWhitespaceSensitivity": "css", // html空格敏感度
+  "endOfLine": "lf", // 末尾换行符，可以看一下 vscode 的右下角，macOS 是 LF
+  "embeddedLanguageFormatting": "auto", // 格式化文件里的代码（比如 markdown ）
+};
+```
+
+新建 /.prettierignore
+
+格式化会忽略的部分
+
+```
+**/*.min.js
+**/*.min.css
+
+.idea/
+node_modules/
+dist/
+build/
+```

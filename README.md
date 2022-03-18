@@ -277,36 +277,17 @@ module.exports = {
 };
 ```
 
-2. 配置开发环境（使用 webpack 自带的处理方式）
+2. 配置共用环境
 
-/webpack.dev.js
+最后实际的配置是在 /webpack.common.js 里做了统一的处理。后面给出了用 webpack 自带的通过设置 type 的方式打包的方法，暂时不会放入主分支
 
-```javascript
-// ...
-module.exports = merge(common, {
-  // ...
-  module: {
-    rules: [
-      // ...
-      {
-        test: /\.(png|jpe?g|svg|gif)$/,
-        type: "asset/inline",
-      },
-    ],
-  },
-  // ...
-});
-```
-
-3. 配置生产环境（使用 file-loader）
+/webpack.common.js
 
 安装 file-loader
 
 ```shell
 pnpm install -D file-loader
 ```
-
-配置 /webpack.prod.js
 
 ```javascript
 // ...
@@ -331,6 +312,27 @@ module.exports = {
   },
   // ...
 };
+```
+
+3. type 的打包方式（不加入最后主分支）
+
+/webpack.dev.js
+
+```javascript
+// ...
+module.exports = merge(common, {
+  // ...
+  module: {
+    rules: [
+      // ...
+      {
+        test: /\.(png|jpe?g|svg|gif)$/,
+        type: "asset/inline",
+      },
+    ],
+  },
+  // ...
+});
 ```
 
 4. 测试

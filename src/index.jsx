@@ -6,7 +6,7 @@ import "./index.less";
 
 function App() {
   return (
-    <div id='circle' class='redRect'>
+    <div id='circle' className='redRect'>
       react template
       <img src={a} />
     </div>

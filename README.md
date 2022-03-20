@@ -834,3 +834,100 @@ node_modules/
 dist/
 build/
 ```
+
+4. 配置 ESlint
+
+安装 eslint 和部分插件
+
+```shell
+pnpm install -D eslint
+pnpm install -D eslint-plugin-react@latest @typescript-eslint/eslint-plugin@latest @typescript-eslint/parser@latest
+```
+
+有一部分配置 TypeScript，关于 TypeScript 的配置将在后面提供
+
+```shell
+npx eslint --init
+```
+
+接下来会出现一些交互选择，作者用的是
+
+```shell
+How would you like to use ESLint? · problems
+✔ What type of modules does your project use? · esm
+✔ Which framework does your project use? · react
+✔ Does your project use TypeScript? · Yes
+✔ Where does your code run? · browser
+✔ What format do you want your config file to be in? · JavaScript
+```
+
+5. 解决 eslint 和 prettier 配置的冲突
+
+```shell
+pnpm install -D eslint-config-prettier
+```
+
+/.eslintrc.js
+
+这个文件应该会自动生成，对照着加入一些自定义的配置即可。本文件在之后会根据需要升级，有需要可看 main 分支上的最新版
+
+```javascript
+module.exports = {
+  env: {
+    browser: true,
+    es2021: true,
+    node: true,
+  },
+  extends: [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier", // 添加`prettier`拓展 用于和`prettier`冲突时覆盖`eslint`规则
+  ],
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: "latest",
+    sourceType: "module",
+  },
+  plugins: ["react", "@typescript-eslint"],
+  rules: {
+    "react/jsx-filename-extension": [2, { extensions: [".jsx", ".tsx"] }],
+    "no-use-before-define": 1,
+  },
+};
+```
+
+/.eslintignore
+
+```
+.eslintrc.js
+node_modules
+public
+```
+
+/package.json
+
+在 build 和 dev 前加上 pnpm run lint 来让我们每次运行都进行校验
+
+```json
+{
+  // ...
+  "scripts": {
+    "build": "pnpm run lint & webpack --config webpack.prod.js",
+    "dev": "pnpm run lint & webpack serve --config webpack.dev.js",
+    "lint": "eslint src/**/*.js src/**/*.jsx --fix"
+  }
+  // ...
+}
+```
+
+6. 测试
+
+在之前的版本中，我们的 /src/index.jsx 中 div 的类名用的是 class，而在 jsx 中，这个应该为 className。eslint 会帮我们检查出来并自动修复
+
+```shell
+pnpm run lint
+```

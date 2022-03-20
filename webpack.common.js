@@ -14,6 +14,11 @@ module.exports = {
         use: "babel-loader", // 使用 babel-loader 处理
       },
       {
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
+      },
+      {
         test: /\.(eot|ttf|woff|woff2)$/,
         type: "asset/resource",
         generator: {
@@ -78,4 +83,5 @@ module.exports = {
   cache: {
     type: "filesystem",
   },
+  devtool: "inline-source-map",
 };

@@ -931,3 +931,92 @@ public
 ```shell
 pnpm run lint
 ```
+
+## 十二、TypeScript
+
+1. 安装 typescript ts-loader
+
+```shell
+pnpm install -D typescript ts-loader
+```
+
+2. 配置 typescript
+
+新建 /tsconfig.json
+
+/tsconfig.json
+
+本文件在之后会根据需要升级，有需要可看 main 分支上的最新版
+
+```json
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "target": "es5",
+    "strict": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "forceConsistentCasingInFileNames": false,
+    "noImplicitAny": true,
+    "module": "es6",
+    "jsx": "react",
+    "allowJs": true,
+    "moduleResolution": "node"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}
+```
+
+/webpack.common.js
+
+```javascript
+// ...
+module.exports = {
+  // ...
+  module: {
+    rules: [
+      // ...
+      {
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
+      },
+      // ...
+    ],
+  },
+  // ...
+};
+```
+
+3. 测试
+
+新建 /src/value.ts
+
+/src/value.ts
+
+```typescript
+type T = string | number;
+
+const value: T = "value";
+
+export { value };
+```
+
+/src/index.jsx
+
+```javascript
+// ...
+import { value } from "./value.ts";
+
+function App() {
+  console.log(value);
+  // ...
+}
+// ...
+```
+
+```shell
+pnpm run dev
+```
+
+看看控制台有没有打印 value ～
